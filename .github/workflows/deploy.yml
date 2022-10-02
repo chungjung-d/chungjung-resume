@@ -33,7 +33,7 @@ jobs:
         id: build-be-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_BE_REPOSITORY: doggly-nestjs
+          ECR_BE_REPOSITORY: resume
         run: |
           IMAGE_TAG="master"
           docker build -t $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG .

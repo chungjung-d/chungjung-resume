@@ -55,12 +55,16 @@ jobs:
 
       - name: Update Kubernetes resources
         run: |
+          GITHUB_SHA=${{ github.sha }}
+          IMAGE_TAG=${GITHUB_SHA::7}
           cd chungjung-kubernetes/project/profile/overlays/production/
           kustomize edit set image $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG
           cat kustomization.yaml
 
       - name: Commit and push changes
         run: |
+          GITHUB_SHA=${{ github.sha }}
+          IMAGE_TAG=${GITHUB_SHA::7}
           cd chungjung-kubernetes
           git config --global user.email "chungjung.d@gmail.com"
           git config --global user.name "argocd"

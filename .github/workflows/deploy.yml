@@ -55,7 +55,7 @@ jobs:
 
       - name: Update Kubernetes resources
         run: |
-          cd chungjung-kubernetes/profile/overlays/production/
+          cd chungjung-kubernetes/project/profile/overlays/production/
           kustomize edit set image $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG
           cat kustomization.yaml
 

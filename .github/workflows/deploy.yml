@@ -40,3 +40,30 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG"
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1
+
+      - name: Checkout Kusomize Repository
+        uses: actions/checkout@v2
+        with:
+          repository: chungjung-d/chungjung-kubernetes
+          ref: master
+
+          token: ${{ secrets.ACTION_TOKEN }}
+          path: chungjung-kubernetes
+
+      - name: Update Kubernetes resources
+        run: |
+          cd chungjung-kubernetes/profile/overlays/production
+          kustomize edit set image $ECR_REGISTRY/$ECR_BE_REPOSITORY:$IMAGE_TAG
+          cat kustomization.yaml
+
+      - name: Commit and push changes
+        run: |
+          cd chungjung-kubernetes
+          git config --global user.email "chungjung.d@gmail.com"
+          git config --global user.name "argocd"
+          git add .
+          git commit -m "Update image $IMAGE_TAG"
+          git push origin master
